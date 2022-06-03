@@ -5,6 +5,8 @@
 
 #include "MinMax.h"
 
+//pawn endgame:  8/k7/3p4/p2P1p2/P2P1P2/8/8/K7 w - - 0 1
+
 
 float evaluate(thc::ChessRules &board) {
     float val = 0.f;
@@ -48,7 +50,7 @@ float evaluate(thc::ChessRules &board) {
 
 extern "C" {
 __declspec(dllexport) float run(const char *fenInput, char moveOutput[6]) {
-    MinMax minMax(8, evaluate);
+    MinMax minMax(30, evaluate);
     thc::ChessRules board;
     board.Forsyth(fenInput);
     auto[move, eval] = minMax.run(board);
@@ -69,6 +71,10 @@ void test1();
 
 void test2();
 
+void test3();
+
+void test4();
+void test5();
 int main() {
     test1();
 }
@@ -116,16 +122,12 @@ void test1() {
         auto end = std::chrono::high_resolution_clock::now();
         testTime += std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         std::cout << "Move: " << move.TerseOut() << " | Eval: " << eval << "\n";
-#ifdef SAVE_MOVE_SEQUENCE
         std::cout << "Move sequence: ";
         for (int i = minMax.getMoveSequence().size - 1; i >= 0; i--) {
             board.PlayMove(minMax.getMoveSequence().moves[i]);
-            std::cout << minMax.getMoveSequence().moves[i].TerseOut() << " -> ";
+            std::cout << minMax.getMoveSequence().moves[i].TerseOut() << " -> " << std::flush;
         }
-        auto evalAfterPlayingMoves = evaluate(board);
-        std::cout << "eval: " << eval << " eval after playing moves: " << evalAfterPlayingMoves << "\n";
-#endif
-        std::cout << "\n";
+        std::cout << "\n\n";
     }
 
     std::cout << "\n\nTEST TIME: " << testTime << " ms\n\n";
@@ -180,6 +182,99 @@ void test2() {
         }
         board.PlayMove(moveToPlay);
     }
+    std::cout << "\n\nTEST TIME: " << testTime << " ms\n\n";
+#ifdef DEBUG_STATS
+    minMax.printDebugStats();
+#endif
+}
+
+void test3() {
+    thc::ChessRules board;
+    thc::Move move;
+    move.NaturalIn(&board, "e2e4");
+    board.PlayMove(move);
+    move.NaturalIn(&board, "b8a6");
+    board.PlayMove(move);
+    move.NaturalIn(&board, "e4e5");
+    board.PlayMove(move);
+    move.NaturalIn(&board, "a8b8");
+    board.PlayMove(move);
+    move.NaturalIn(&board, "e5e6");
+    board.PlayMove(move);
+    display_position(board);
+
+    MinMax minMax(2, evaluate);
+
+    auto[minMaxBestMove, eval] = minMax.run(board);
+    std::cout << "Move: " << minMaxBestMove.TerseOut() << " | Eval: " << eval << "\n";
+    std::cout << "Move sequence: ";
+    for (int i = minMax.getMoveSequence().size - 1; i >= 0; i--) {
+        board.PlayMove(minMax.getMoveSequence().moves[i]);
+        std::cout << minMax.getMoveSequence().moves[i].TerseOut() << " -> ";
+    }
+    auto evalAfterPlayingMoves = evaluate(board);
+    std::cout << "eval: " << eval << " eval after playing moves: " << evalAfterPlayingMoves << "\n";
+    display_position(board);
+
+    std::cout << "\n";
+}
+
+void test4() {
+    MinMax minMax(25, evaluate);
+    thc::ChessRules board;
+
+    uint32_t testTime = 0;
+
+    std::string fen = "8/k7/3p4/p2P1p2/P2P1P2/8/8/K7 w - - 0 1";
+
+    board.Forsyth(fen.c_str());
+    minMax.reset();
+
+    std::cout << fen << "\n";
+    auto start = std::chrono::high_resolution_clock::now();
+    auto[move, eval] = minMax.run(board);
+    auto end = std::chrono::high_resolution_clock::now();
+    testTime += std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    std::cout << "Move: " << move.TerseOut() << " | Eval: " << eval << "\n";
+    std::cout << "Move sequence: ";
+    for (int i = minMax.getMoveSequence().size - 1; i >= 0; i--) {
+        board.PlayMove(minMax.getMoveSequence().moves[i]);
+        std::cout << minMax.getMoveSequence().moves[i].TerseOut() << " -> " << std::flush;
+    }
+    std::cout << "\n\n";
+
+
+    std::cout << "\n\nTEST TIME: " << testTime << " ms\n\n";
+#ifdef DEBUG_STATS
+    minMax.printDebugStats();
+#endif
+}
+
+void test5() {
+    MinMax minMax(6, evaluate);
+    thc::ChessRules board;
+
+    uint32_t testTime = 0;
+
+    std::string fen = "r2q1rk1/4bppp/p2p4/2pP4/3pP3/3Q4/PP1B1PPP/R3R1K1 w - - 1 1";
+
+    board.Forsyth(fen.c_str());
+    minMax.reset();
+
+    std::cout << fen << "\n";
+    auto start = std::chrono::high_resolution_clock::now();
+    auto[move, eval] = minMax.run(board);
+    auto end = std::chrono::high_resolution_clock::now();
+    testTime += std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    std::cout << "Move: " << move.TerseOut() << " | Eval: " << eval << "\n";
+    std::cout << "Move sequence: ";
+    for (int i = minMax.getMoveSequence().size - 1; i >= 0; i--) {
+        board.PlayMove(minMax.getMoveSequence().moves[i]);
+        std::cout << minMax.getMoveSequence().moves[i].TerseOut() << " -> " << std::flush;
+    }
+    std::cout << "\n\n";
+
+
     std::cout << "\n\nTEST TIME: " << testTime << " ms\n\n";
 #ifdef DEBUG_STATS
     minMax.printDebugStats();
