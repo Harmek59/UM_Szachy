@@ -2,8 +2,8 @@
 #include <random>
 #include <cstring>
 #include <optional>
-#include <map>
 
+#include "ChessBoardWeights.h"
 #include "MinMax.h"
 
 
@@ -13,122 +13,63 @@ float evaluate(thc::ChessRules &board) {
         switch (board.squares[i]) {
             case 'P':
                 val += 1;
+                val += pawnsOnBoardPositions[i] / 100.f;
                 break;
             case 'R':
                 val += 5;
+                val += rookOnBoardPositions[i] / 100.f;
                 break;
             case 'N':
                 val += 3;
+                val += knightsOnBoardPositions[i] / 100.f;
                 break;
             case 'B':
                 val += 3;
+                val += bishopsOnBoardPositions[i] / 100.f;
                 break;
             case 'Q':
                 val += 9;
+                val += queenOnBoardPositions[i] / 100.f;
                 break;
+            case 'K':
+                val += kingOnBoardPositions[i] / 100.f;
+                break;
+
+                // black
             case 'p':
                 val -= 1;
+                val -= pawnsOnBoardPositions[63 - i] / 100.f;
                 break;
             case 'r':
                 val -= 5;
+                val -= rookOnBoardPositions[63 - i] / 100.f;
                 break;
             case 'n':
                 val -= 3;
+                val -= knightsOnBoardPositions[63 - i] / 100.f;
                 break;
             case 'b':
                 val -= 3;
+                val -= bishopsOnBoardPositions[63 - i] / 100.f;
                 break;
             case 'q':
                 val -= 9;
+                val -= queenOnBoardPositions[63 - i] / 100.f;
+                break;
+            case 'k':
+                val -= kingOnBoardPositions[63 - i] / 100.f;
                 break;
         }
     }
     return val;
 }
 
-
-std::vector<std::vector<int>> pawnsOnBoardPositions = {
-        {0,  0,  0,   0,   0,   0,   0,  0,},
-        {50, 50, 50,  50,  50,  50,  50, 50},
-        {10, 10, 20,  30,  30,  20,  10, 10},
-        {5,  5,  10,  25,  25,  10,  5,  5},
-        {0,  0,  0,   20,  20,  0,   0,  0},
-        {5,  -5, -10, 0,   0,   -10, -5, 5},
-        {5,  10, 10,  -20, -20, 10,  10, 5},
-        {0,  0,  0,   0,   0,   0,   0,  0}
-};
-
-std::vector<std::vector<int>> knightsOnBoardPositions = {
-        {-50, -40, -30, -30, -30, -30, -40, -50},
-        {-40, -20, 0,   0,   0,   0,   -20, -40},
-        {-30, 0,   10,  15,  15,  10,  0,   -30},
-        {-30, 5,   15,  20,  20,  15,  5,   -30},
-        {-30, 0,   15,  20,  20,  15,  0,   -30},
-        {-30, 5,   10,  15,  15,  10,  5,   -30},
-        {-40, -20, 0,   5,   5,   0,   -20, -40},
-        {-50, -40, -30, -30, -30, -30, -40, -50}};
-
-std::vector<std::vector<int>> bishopsOnBoardPositions = {
-        {-20, -10, -10, -10, -10, -10, -10, -20},
-        {-10, 0,   0,   0,   0,   0,   0,   -10},
-        {-10, 0,   5,   10,  10,  5,   0,   -10},
-        {-10, 5,   5,   10,  10,  5,   5,   -10},
-        {-10, 0,   10,  10,  10,  10,  0,   -10},
-        {-10, 10,  10,  10,  10,  10,  10,  -10},
-        {-10, 5,   0,   0,   0,   0,   5,   -10},
-        {-20, -10, -10, -10, -10, -10, -10, -20}
-};
-
-std::vector<std::vector<int>> rookOnBoardPositions = {
-        {0,  0,  0,  0,  0,  0,  0,  0},
-        {5,  10, 10, 10, 10, 10, 10, 5},
-        {-5, 0,  0,  0,  0,  0,  0,  -5},
-        {-5, 0,  0,  0,  0,  0,  0,  -5},
-        {-5, 0,  0,  0,  0,  0,  0,  -5},
-        {-5, 0,  0,  0,  0,  0,  0,  -5},
-        {-5, 0,  0,  0,  0,  0,  0,  -5},
-        {0,  0,  0,  5,  5,  0,  0,  0}
-};
-
-std::vector<std::vector<int>> queenOnBoardPositions = {
-        {-20, -10, -10, -5, -5, -10, -10, -20},
-        {-10, 0,   0,   0,  0,  0,   0,   -10},
-        {-10, 0,   5,   5,  5,  5,   0,   -10},
-        {-5,  0,   5,   5,  5,  5,   0,   -5},
-        {0,   0,   5,   5,  5,  5,   0,   -5},
-        {-10, 5,   5,   5,  5,  5,   0,   -10},
-        {-10, 0,   5,   0,  0,  0,   0,   -10},
-        {-20, -10, -10, -5, -5, -10, -10, -20}
-};
-
-std::vector<std::vector<int>> kingOnBoardPositions = {
-        {-30, -40, -40, -50, -50, -40, -40, -30},
-        {-30, -40, -40, -50, -50, -40, -40, -30},
-        {-30, -40, -40, -50, -50, -40, -40, -30},
-        {-30, -40, -40, -50, -50, -40, -40, -30},
-        {-20, -30, -30, -40, -40, -30, -30, -20},
-        {-10, -20, -20, -20, -20, -20, -20, -10},
-        {20,  20,  0,   0,   0,   0,   20,  20},
-        {20,  30,  10,  0,   0,   10,  30,  20}
-};
-
-std::map<char, std::vector<std::vector<int>>> mapOfPiecePositions
-        {
-                {'p', pawnsOnBoardPositions},
-                {'k', knightsOnBoardPositions},
-                {'b', bishopsOnBoardPositions},
-                {'r', rookOnBoardPositions},
-                {'q', queenOnBoardPositions},
-                {'k', kingOnBoardPositions}
-        };
-
-
 extern "C" {
 __declspec(dllexport) float run(const char *fenInput, char moveOutput[6]) {
     MinMax minMax(8, evaluate);
     thc::ChessRules board;
     board.Forsyth(fenInput);
-    auto [move, eval] = minMax.run(board);
+    auto[move, eval] = minMax.run(board);
     strcpy(moveOutput, move.TerseOut().c_str());
     return eval;
 }
@@ -189,7 +130,7 @@ void test1() {
 
         std::cout << fen << "\n";
         auto start = std::chrono::high_resolution_clock::now();
-        auto [move, eval] = minMax.run(board);
+        auto[move, eval] = minMax.run(board);
         auto end = std::chrono::high_resolution_clock::now();
         testTime += std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         std::cout << "Move: " << move.TerseOut() << " | Eval: " << eval << "\n";
@@ -243,7 +184,7 @@ void test2() {
     for (int i = 0; i < numberOfMovesToPlay; i++) {
         auto start = std::chrono::high_resolution_clock::now();
 
-        auto [move, eval] = minMax.run(board);
+        auto[move, eval] = minMax.run(board);
 
         auto end = std::chrono::high_resolution_clock::now();
         testTime += std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
