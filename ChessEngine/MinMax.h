@@ -13,7 +13,7 @@
 
 //#define GENERATE_MOVES_WITH_ADDITIONAL_DATA
 
-//#define TIME_OUT 3'000
+#define TIME_OUT 3'000
 
 //#define DEBUG_STATS
 
