@@ -8,6 +8,13 @@
 
 //pawn endgame:  8/k7/3p4/p2P1p2/P2P1P2/8/8/K7 w - - 0 1
 
+#if defined(__linux) || defined(__linux__) || defined(linux)
+# define LINUX
+#elif defined(__APPLE__)
+# define MACOS
+#elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
+# define WINDOWS
+#endif
 
 float evaluate(thc::ChessRules &board) {
     float val = 0.f;
@@ -67,7 +74,11 @@ float evaluate(thc::ChessRules &board) {
 }
 
 extern "C" {
+#ifdef WINDOWS
 __declspec(dllexport) float run(const char *fenInput, char moveOutput[6]) {
+#else
+    float run(const char *fenInput, char moveOutput[6]) {
+#endif
     MinMax minMax(30, evaluate);
     thc::ChessRules board;
     board.Forsyth(fenInput);
@@ -92,7 +103,9 @@ void test2();
 void test3();
 
 void test4();
+
 void test5();
+
 int main() {
     test1();
 }
