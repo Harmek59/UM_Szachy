@@ -3,6 +3,7 @@
 #include <cstring>
 #include <optional>
 
+#include "ChessBoardWeights.h"
 #include "MinMax.h"
 
 //pawn endgame:  8/k7/3p4/p2P1p2/P2P1P2/8/8/K7 w - - 0 1
@@ -14,39 +15,56 @@ float evaluate(thc::ChessRules &board) {
         switch (board.squares[i]) {
             case 'P':
                 val += 1;
+                val += pawnsOnBoardPositions[i] / 100.f;
                 break;
             case 'R':
                 val += 5;
+                val += rookOnBoardPositions[i] / 100.f;
                 break;
             case 'N':
                 val += 3;
+                val += knightsOnBoardPositions[i] / 100.f;
                 break;
             case 'B':
                 val += 3;
+                val += bishopsOnBoardPositions[i] / 100.f;
                 break;
             case 'Q':
                 val += 9;
+                val += queenOnBoardPositions[i] / 100.f;
                 break;
+            case 'K':
+                val += kingOnBoardPositions[i] / 100.f;
+                break;
+
+                // black
             case 'p':
                 val -= 1;
+                val -= pawnsOnBoardPositions[63 - i] / 100.f;
                 break;
             case 'r':
                 val -= 5;
+                val -= rookOnBoardPositions[63 - i] / 100.f;
                 break;
             case 'n':
                 val -= 3;
+                val -= knightsOnBoardPositions[63 - i] / 100.f;
                 break;
             case 'b':
                 val -= 3;
+                val -= bishopsOnBoardPositions[63 - i] / 100.f;
                 break;
             case 'q':
                 val -= 9;
+                val -= queenOnBoardPositions[63 - i] / 100.f;
+                break;
+            case 'k':
+                val -= kingOnBoardPositions[63 - i] / 100.f;
                 break;
         }
     }
     return val;
 }
-
 
 extern "C" {
 __declspec(dllexport) float run(const char *fenInput, char moveOutput[6]) {
@@ -54,7 +72,7 @@ __declspec(dllexport) float run(const char *fenInput, char moveOutput[6]) {
     thc::ChessRules board;
     board.Forsyth(fenInput);
     auto[move, eval] = minMax.run(board);
-    strcpy_s(moveOutput, 6, move.TerseOut().c_str());
+    strcpy(moveOutput, move.TerseOut().c_str());
     return eval;
 }
 }
