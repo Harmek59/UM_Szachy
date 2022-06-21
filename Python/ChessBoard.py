@@ -42,7 +42,7 @@ class ChessBoard:
     def __init__(self):
         self.board_size = 960
         self.piece_size = 960 // 8
-        self.board_center = (1280 / 2, 1000 / 2)
+        self.board_center = (1000 / 2, 1000 / 2)
         self.load_chess_set()
         self.board_sprite = BoardSprite(self.board_size, self.board_center)
         self.tile_size = self.board_size / 8

@@ -5,7 +5,7 @@ from ChessEngine import ChessEngine
 
 pygame.init()
 
-size = width, height = 1280, 1000
+size = width, height = 1000, 1000
 black = 0, 0, 0
 
 screen = pygame.display.set_mode(size)
@@ -13,7 +13,9 @@ clock = pygame.time.Clock()
 
 chess_board = ChessBoard()
 # fen1 = "r1bqkb1r/4npp1/p1p4p/1p1pP1B1/8/1B6/PPPN1PPP/R2Q1RK1 w kq -"
-# chess_board.chess_logic.set_fen(fen1)
+# fen2 = "8/k7/3p4/p2P1p2/P2P1P2/8/8/K7 w - - 0 1"
+#
+# chess_board.chess_logic.set_fen(fen2)
 
 game_over = False
 

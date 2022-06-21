@@ -17,56 +17,57 @@
 #endif
 
 float evaluate(thc::ChessRules &board) {
+    static constexpr float boardPositionWeightDivisor = 100.f;
     float val = 0.f;
     for (int i = 0; i < 64; i++) {
         switch (board.squares[i]) {
             case 'P':
                 val += 1;
-                val += pawnsOnBoardPositions[i] / 100.f;
+                val += pawnsOnBoardPositions[i] / boardPositionWeightDivisor;
                 break;
             case 'R':
                 val += 5;
-                val += rookOnBoardPositions[i] / 100.f;
+                val += rookOnBoardPositions[i] / boardPositionWeightDivisor;
                 break;
             case 'N':
                 val += 3;
-                val += knightsOnBoardPositions[i] / 100.f;
+                val += knightsOnBoardPositions[i] / boardPositionWeightDivisor;
                 break;
             case 'B':
                 val += 3;
-                val += bishopsOnBoardPositions[i] / 100.f;
+                val += bishopsOnBoardPositions[i] / boardPositionWeightDivisor;
                 break;
             case 'Q':
                 val += 9;
-                val += queenOnBoardPositions[i] / 100.f;
+                val += queenOnBoardPositions[i] / boardPositionWeightDivisor;
                 break;
             case 'K':
-                val += kingOnBoardPositions[i] / 100.f;
+                val += kingOnBoardPositions[i] / boardPositionWeightDivisor;
                 break;
 
                 // black
             case 'p':
                 val -= 1;
-                val -= pawnsOnBoardPositions[63 - i] / 100.f;
+                val -= pawnsOnBoardPositions[63 - i] / boardPositionWeightDivisor;
                 break;
             case 'r':
                 val -= 5;
-                val -= rookOnBoardPositions[63 - i] / 100.f;
+                val -= rookOnBoardPositions[63 - i] / boardPositionWeightDivisor;
                 break;
             case 'n':
                 val -= 3;
-                val -= knightsOnBoardPositions[63 - i] / 100.f;
+                val -= knightsOnBoardPositions[63 - i] / boardPositionWeightDivisor;
                 break;
             case 'b':
                 val -= 3;
-                val -= bishopsOnBoardPositions[63 - i] / 100.f;
+                val -= bishopsOnBoardPositions[63 - i] / boardPositionWeightDivisor;
                 break;
             case 'q':
                 val -= 9;
-                val -= queenOnBoardPositions[63 - i] / 100.f;
+                val -= queenOnBoardPositions[63 - i] / boardPositionWeightDivisor;
                 break;
             case 'k':
-                val -= kingOnBoardPositions[63 - i] / 100.f;
+                val -= kingOnBoardPositions[63 - i] / boardPositionWeightDivisor;
                 break;
         }
     }
@@ -153,11 +154,6 @@ void test1() {
         auto end = std::chrono::high_resolution_clock::now();
         testTime += std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         std::cout << "Move: " << move.TerseOut() << " | Eval: " << eval << "\n";
-        std::cout << "Move sequence: ";
-        for (int i = minMax.getMoveSequence().size - 1; i >= 0; i--) {
-            board.PlayMove(minMax.getMoveSequence().moves[i]);
-            std::cout << minMax.getMoveSequence().moves[i].TerseOut() << " -> " << std::flush;
-        }
         std::cout << "\n\n";
     }
 
@@ -238,11 +234,6 @@ void test3() {
 
     auto[minMaxBestMove, eval] = minMax.run(board);
     std::cout << "Move: " << minMaxBestMove.TerseOut() << " | Eval: " << eval << "\n";
-    std::cout << "Move sequence: ";
-    for (int i = minMax.getMoveSequence().size - 1; i >= 0; i--) {
-        board.PlayMove(minMax.getMoveSequence().moves[i]);
-        std::cout << minMax.getMoveSequence().moves[i].TerseOut() << " -> ";
-    }
     auto evalAfterPlayingMoves = evaluate(board);
     std::cout << "eval: " << eval << " eval after playing moves: " << evalAfterPlayingMoves << "\n";
     display_position(board);
@@ -267,11 +258,6 @@ void test4() {
     auto end = std::chrono::high_resolution_clock::now();
     testTime += std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
     std::cout << "Move: " << move.TerseOut() << " | Eval: " << eval << "\n";
-    std::cout << "Move sequence: ";
-    for (int i = minMax.getMoveSequence().size - 1; i >= 0; i--) {
-        board.PlayMove(minMax.getMoveSequence().moves[i]);
-        std::cout << minMax.getMoveSequence().moves[i].TerseOut() << " -> " << std::flush;
-    }
     std::cout << "\n\n";
 
 
@@ -298,11 +284,6 @@ void test5() {
     auto end = std::chrono::high_resolution_clock::now();
     testTime += std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
     std::cout << "Move: " << move.TerseOut() << " | Eval: " << eval << "\n";
-    std::cout << "Move sequence: ";
-    for (int i = minMax.getMoveSequence().size - 1; i >= 0; i--) {
-        board.PlayMove(minMax.getMoveSequence().moves[i]);
-        std::cout << minMax.getMoveSequence().moves[i].TerseOut() << " -> " << std::flush;
-    }
     std::cout << "\n\n";
 
 
