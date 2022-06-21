@@ -266,10 +266,13 @@ private:
 
 
             thc::Square kingSquare;
+            thc::Square myKingSquare;
             if (board.WhiteToPlay()) {
                 kingSquare = board.bking_square;
+                myKingSquare = board.wking_square;
             } else {
                 kingSquare = board.wking_square;
+                myKingSquare = board.bking_square;
             }
             constexpr static std::array<int, 8> squareOffsets = {-9, -8, -7, -1, 1, 7, 8, 9};
             for (auto offset: squareOffsets) {
@@ -278,6 +281,12 @@ private:
                 }
                 if (move.src == kingSquare + offset) {
                     val -= 0.1f;
+                }
+                if (move.dst == myKingSquare + offset) {
+                    val += 0.1f /2.f;
+                }
+                if (move.src == myKingSquare + offset) {
+                    val -= 0.1f /2.f;
                 }
             }
 
