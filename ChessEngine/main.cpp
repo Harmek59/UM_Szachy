@@ -1,5 +1,4 @@
 #include <iostream>
-#include <random>
 #include <cstring>
 #include <optional>
 
@@ -15,6 +14,19 @@
 #elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
 # define WINDOWS
 #endif
+
+float ifAroundKing(int kingsPosition, int currentPosition, bool white) {
+    if (kingsPosition - 1 == currentPosition || kingsPosition + 1 == currentPosition ||
+        kingsPosition + 8 == currentPosition || kingsPosition - 8 == currentPosition) {
+        if (white) {
+            return 0.5;
+        } else {
+            return -0.5;
+        }
+    } else {
+        return 0.0;
+    }
+}
 
 float evaluate(thc::ChessRules &board) {
     float val = 0.f;
@@ -69,6 +81,9 @@ float evaluate(thc::ChessRules &board) {
                 val -= kingOnBoardPositions[63 - i] / 100.f;
                 break;
         }
+
+//        val += ifAroundKing(board.bking_square, i, true);
+//        val -= ifAroundKing(board.wking_square, i, false);
     }
     return val;
 }
